@@ -2,22 +2,30 @@
 
 ## Overview
 
-This Dockerfile is a wrapper over Senzing's G2Loader.py
+This Dockerfile is a wrapper over Senzing's G2Loader.py.
 
 ### Contents
 
-1. [Create Docker container](#create-docker-container)
+1. [Build docker image](#build-docker-image)
+1. [Create SENZING_DIR](#create-senzing_dir)
+1. [Set environment variables](#set-environment-variables)
 1. [Run Docker container](#run-docker-container)
 
-## Create docker container
+## Build docker image
 
-```console
-docker build --tag senzing/g2loader https://github.com/senzing/docker-g2loader.git
-```
+1. If `senzing/python-base` image is not in local docker repository, run:
 
-## Run Docker container
+    ```console
+    docker build --tag senzing/python-base https://github.com/senzing/docker-python-base.git
+    ```
 
-### Create SENZING_DIR
+1. Build image:
+
+    ```console
+    docker build --tag senzing/g2loader https://github.com/senzing/docker-g2loader.git
+    ```
+
+## Create SENZING_DIR
 
 If you do not already have an `/opt/senzing` directory, here's how to install the code.
 
@@ -50,7 +58,7 @@ If you do not already have an `/opt/senzing` directory, here's how to install th
       --file=$/tmp/Senzing_API.tgz
     ```
 
-### Set Environment variables
+## Set environment variables
 
 1. Identify the database username and password.
    Example:
@@ -87,7 +95,7 @@ If you do not already have an `/opt/senzing` directory, here's how to install th
     export MYSQL_NETWORK=nameofthe_network
     ```
 
-### Run docker container
+## Run docker container
 
 1. Run the docker container.
 
