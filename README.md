@@ -103,7 +103,7 @@ If you do not already have an `/opt/senzing` directory, here's how to install th
     docker run -it  \
       --volume ${SENZING_DIR}:/opt/senzing \
       --net ${MYSQL_NETWORK} \
-      --env SENZING_DATABASE_URL="mysql://${MYSQL_USERNAME}:${MYSQL_PASSWORD}@${MYSQL_HOST}:3306/?schema=${MYSQL_DATABASE}" \
+      --env SENZING_DATABASE_URL="mysql://${MYSQL_USERNAME}:${MYSQL_PASSWORD}@${MYSQL_HOST}:3306/${MYSQL_DATABASE}" \
       senzing/g2loader \
         --purgeFirst \
         --projectFile /opt/senzing/g2/python/demo/sample/project.csv
