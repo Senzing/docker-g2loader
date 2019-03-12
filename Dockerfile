@@ -1,12 +1,15 @@
-FROM senzing/python-base
+ARG BASE_IMAGE=senzing/python-base
+FROM ${BASE_IMAGE}
 
-# Build-time variables
+# Build-time variables.
 
-ENV REFRESHED_AT=2019-01-14
+ENV REFRESHED_AT=2019-03-09
 
-# Run-time command
+LABEL Name="senzing/g2loader" \
+      Version="1.0.0"
+
+# Runtime execution.
 
 WORKDIR /opt/senzing/g2/python
-ENTRYPOINT ["python", "G2Loader.py"]
-
+ENTRYPOINT ["/app/docker-entrypoint.sh", "python G2Loader.py" ]
 CMD [""]
