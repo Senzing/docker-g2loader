@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=senzing/python-base
+ARG BASE_IMAGE=senzing/senzing-base
 FROM ${BASE_IMAGE}
 
 # Build-time variables.
