@@ -36,16 +36,6 @@ This repository assumes a working knowledge of:
 
 ### Build docker image
 
-1. Build base image.  This Dockerfile uses a "senzing/python-base" image.
-
-    ```dockerfile
-    ARG BASE_IMAGE=senzing/python-base
-    FROM ${BASE_IMAGE}
-    ```
-
-    To build a base image, see the list of
-    Senzing [Docker base images](https://github.com/Senzing?q=docker-+-base).
-
 1. Build docker image.  Example:
 
     ```console
@@ -53,7 +43,6 @@ This repository assumes a working knowledge of:
 
     sudo docker build \
       --tag senzing/g2loader \
-      --build-arg BASE_IMAGE=${BASE_IMAGE} \
       https://github.com/senzing/docker-g2loader.git
     ```
 
@@ -87,10 +76,13 @@ This repository assumes a working knowledge of:
     export SENZING_DEBUG=1
     export SENZING_DIR=/opt/senzing
 
-    docker run -it  \
-      --volume ${SENZING_DIR}:/opt/senzing \
+    docker run \
       --env SENZING_DATABASE_URL="${SENZING_DATABASE_URL}" \
       --env SENZING_DEBUG="${SENZING_DEBUG}" \
+      --interactive \
+      --rm \
+      --tty \
+      --volume ${SENZING_DIR}:/opt/senzing \
       senzing/g2loader \
         --purgeFirst \
         --projectFile /opt/senzing/g2/python/demo/sample/project.csv
@@ -120,10 +112,13 @@ This repository assumes a working knowledge of:
     export SENZING_DATABASE_URL="${DATABASE_PROTOCOL}://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DATABASE}"
     export SENZING_DIR=/opt/senzing
 
-    docker run -it  \
-      --volume ${SENZING_DIR}:/opt/senzing \
-      --net ${SENZING_NETWORK} \
+    docker run \
       --env SENZING_DATABASE_URL="${SENZING_DATABASE_URL}" \
+      --interactive \
+      --net ${SENZING_NETWORK} \
+      --rm \
+      --tty \
+      --volume ${SENZING_DIR}:/opt/senzing \
       senzing/g2loader \
         --purgeFirst \
         --projectFile /opt/senzing/g2/python/demo/sample/project.csv
