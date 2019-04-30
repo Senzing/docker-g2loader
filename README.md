@@ -80,7 +80,30 @@ This repository assumes a working knowledge of:
 
 #### Demonstration 1
 
-Run the docker container with external database and volumes.
+Run the docker container with SQLite database and volumes.
+
+1. :pencil2: Set environment variables.  Example:
+
+    ```console
+    export SENZING_DIR=/opt/senzing
+    ```
+
+1. Run the docker container.  Example:
+
+    ```console
+    docker run \
+      --interactive \
+      --rm \
+      --tty \
+      --volume ${SENZING_DIR}:/opt/senzing \
+      senzing/g2loader \
+        --purgeFirst \
+        --projectFile /opt/senzing/g2/python/demo/sample/project.csv
+    ```
+
+#### Demonstration 2
+
+Run the docker container with PostgreSQL database and volumes.
 
 1. :pencil2: Set environment variables.  Example:
 
@@ -112,9 +135,9 @@ Run the docker container with external database and volumes.
         --projectFile /opt/senzing/g2/python/demo/sample/project.csv
     ```
 
-#### Demonstration 2
+#### Demonstration 3
 
-Run the docker container accessing an external database in a docker network.
+Run the docker container accessing a PostgreSQL database in a docker network.
 
 1. :pencil2: Determine docker network.  Example:
 
