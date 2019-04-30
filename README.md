@@ -41,14 +41,6 @@ This repository assumes a working knowledge of:
 
 ## Demonstrate
 
-### Build docker image
-
-1. Using docker command and GitHub.  Example:
-
-    ```console
-    sudo docker build --tag senzing/g2loader https://github.com/senzing/docker-g2loader.git
-    ```
-
 ### Create SENZING_DIR
 
 1. If `/opt/senzing` directory is not on local system, visit
