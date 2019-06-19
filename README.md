@@ -82,7 +82,7 @@ Run the docker container with SQLite database and volumes.
 1. Run the docker container.  Example:
 
     ```console
-    docker run \
+    sudo docker run \
       --interactive \
       --rm \
       --tty \
@@ -114,7 +114,7 @@ Run the docker container with PostgreSQL database and volumes.
     ```console
     export SENZING_DATABASE_URL="${DATABASE_PROTOCOL}://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DATABASE}"
 
-    docker run \
+    sudo docker run \
       --env SENZING_DATABASE_URL="${SENZING_DATABASE_URL}" \
       --env SENZING_DEBUG="${SENZING_DEBUG}" \
       --interactive \
