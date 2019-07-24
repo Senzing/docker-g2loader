@@ -9,6 +9,10 @@ LABEL Name="senzing/g2loader" \
 
 HEALTHCHECK CMD ["/app/healthcheck.sh"]
 
+# Run as "root" for system installation.
+
+USER root
+
 # Copy files from repository.
 
 COPY ./rootfs /
