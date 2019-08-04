@@ -44,18 +44,18 @@ This repository assumes a working knowledge of:
 
 ### Get docker image
 
-1. Option #1. The `senzing/template` docker image is on [DockerHub](https://hub.docker.com/r/senzing/template) and can be downloaded.
+1. Option #1. The `senzing/g2loader` docker image is on [DockerHub](https://hub.docker.com/r/senzing/g2loader) and can be downloaded.
    Example:
 
     ```console
-    sudo docker pull senzing/template
+    sudo docker pull senzing/g2loader
     ```
 
-1. Option #2. The `senzing/template` image can be built locally.
+1. Option #2. The `senzing/g2loader` image can be built locally.
    Example:
 
     ```console
-    sudo docker build --tag senzing/template https://github.com/senzing/docker-template.git
+    sudo docker build --tag senzing/g2loader https://github.com/senzing/docker-g2loader.git
     ```
 
 ### Initialize Senzing
