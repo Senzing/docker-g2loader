@@ -146,6 +146,7 @@ Create a folder for each output directory.
       --volume ${SENZING_VAR_DIR}:/var/opt/senzing \
       senzing/g2loader \
         --purgeFirst \
+        --iniFile /etc/opt/senzing/G2Project.ini \
         --projectFile /opt/senzing/g2/python/demo/sample/project.csv
     ```
 
