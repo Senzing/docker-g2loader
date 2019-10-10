@@ -4,6 +4,10 @@
 
 This Dockerfile is a wrapper over Senzing's G2Loader.py.
 
+### Related artifacts
+
+1. [DockerHub](https://hub.docker.com/r/senzing/g2loader)
+
 ### Contents
 
 1. [Expectations](#expectations)
