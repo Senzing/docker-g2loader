@@ -19,8 +19,8 @@ This Dockerfile is a wrapper over Senzing's G2Loader.py.
     1. [Configuration](#configuration)
     1. [Volumes](#volumes)
     1. [Docker network](#docker-network)
-    1. [External database](#external-database)
     1. [Docker user](#docker-user)
+    1. [MSSQL support](#mssql-support)
     1. [Run docker container](#run-docker-container)
 1. [Develop](#develop)
     1. [Prerequisite software](#prerequisite-software)
@@ -51,14 +51,13 @@ This repository assumes a working knowledge of:
 ### Initialize Senzing
 
 1. If Senzing has not been initialized, visit
-   [HOWTO - Initialize Senzing](https://github.com/Senzing/knowledge-base/blob/master/HOWTO/initialize-senzing.md).
+   "[How to initialize Senzing with Docker](https://github.com/Senzing/knowledge-base/blob/master/HOWTO/initialize-senzing-with-docker.md)".
 
 ### Configuration
 
 Configuration values specified by environment variable or command line parameter.
 
 - **[SENZING_DATA_VERSION_DIR](https://github.com/Senzing/knowledge-base/blob/master/lists/environment-variables.md#senzing_data_version_dir)**
-- **[SENZING_DATABASE_URL](https://github.com/Senzing/knowledge-base/blob/master/lists/environment-variables.md#senzing_database_url)**
 - **[SENZING_DEBUG](https://github.com/Senzing/knowledge-base/blob/master/lists/environment-variables.md#senzing_debug)**
 - **[SENZING_ETC_DIR](https://github.com/Senzing/knowledge-base/blob/master/lists/environment-variables.md#senzing_etc_dir)**
 - **[SENZING_G2_DIR](https://github.com/Senzing/knowledge-base/blob/master/lists/environment-variables.md#senzing_g2_dir)**
@@ -68,10 +67,12 @@ Configuration values specified by environment variable or command line parameter
 
 ### Volumes
 
-The output of `yum install senzingapi` placed files in different directories.
-Create a folder for each output directory.
+:thinking:
+"[How to initialize Senzing with Docker](https://github.com/Senzing/knowledge-base/blob/master/HOWTO/initialize-senzing-with-docker.md)"
+places files in different directories.
+The following examples show how to identify each output directory.
 
-1. :pencil2: Option #1.
+1. **Example #1:**
    To mimic an actual RPM installation,
    identify directories for RPM output in this manner:
 
@@ -82,7 +83,7 @@ Create a folder for each output directory.
     export SENZING_VAR_DIR=/var/opt/senzing
     ```
 
-1. :pencil2: Option #2.
+1. :pencil2: **Example #2:**
    If Senzing directories were put in alternative directories,
    set environment variables to reflect where the directories were placed.
    Example:
@@ -94,6 +95,13 @@ Create a folder for each output directory.
     export SENZING_ETC_DIR=${SENZING_VOLUME}/etc
     export SENZING_G2_DIR=${SENZING_VOLUME}/g2
     export SENZING_VAR_DIR=${SENZING_VOLUME}/var
+    ```
+
+1. :thinking: If internal database is used, permissions may need to be changed in `/var/opt/senzing`.
+   Example:
+
+    ```console
+    sudo chmod -R 777 ${SENZING_VAR_DIR}
     ```
 
 ### Docker network
@@ -122,40 +130,10 @@ Create a folder for each output directory.
     export SENZING_NETWORK_PARAMETER="--net ${SENZING_NETWORK}"
     ```
 
-### External database
-
-:thinking: **Optional:**  Use if storing data in an external database.
-
-1. :pencil2: Specify database.
-   Example:
-
-    ```console
-    export DATABASE_PROTOCOL=postgresql
-    export DATABASE_USERNAME=postgres
-    export DATABASE_PASSWORD=postgres
-    export DATABASE_HOST=senzing-postgresql
-    export DATABASE_PORT=5432
-    export DATABASE_DATABASE=G2
-    ```
-
-1. Construct Database URL.
-   Example:
-
-    ```console
-    export SENZING_DATABASE_URL="${DATABASE_PROTOCOL}://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DATABASE}"
-    ```
-
-1. Construct parameter for `docker run`.
-   Example:
-
-    ```console
-    export SENZING_DATABASE_URL_PARAMETER="--env SENZING_DATABASE_URL=${SENZING_DATABASE_URL}
-    ```
-
 ### Docker user
 
 :thinking: **Optional:**  The docker container runs as "USER 1001".
-Use if a different userid is required.
+Use if a different userid (UID) is required.
 
 1. :pencil2: Identify user.
    User "0" is root.
@@ -172,6 +150,25 @@ Use if a different userid is required.
     export SENZING_RUNAS_USER_PARAMETER="--user ${SENZING_RUNAS_USER}"
     ```
 
+### MSSQL support
+
+:thinking: **Optional:**  This is only needed if using a Microsoft MSSQL database.
+If using a different database, these steps may be skipped.
+
+1. :pencil2: Identify directory with MSSQL drivers.
+   Example:
+
+    ```console
+    export SENZING_OPT_MICROSOFT_DIR=${SENZING_VOLUME}/opt-microsoft
+    ```
+
+1. Construct parameter for `docker run`.
+   Example:
+
+    ```console
+    export SENZING_OPT_MICROSOFT_DIR_PARAMETER="--volume ${SENZING_OPT_MICROSOFT_DIR}:/opt/microsoft"
+    ```
+
 ### Run docker container
 
 1. Run docker container.
@@ -179,9 +176,6 @@ Use if a different userid is required.
 
     ```console
     sudo docker run \
-      ${SENZING_RUNAS_USER_PARAMETER} \
-      ${SENZING_DATABASE_URL_PARAMETER} \
-      ${SENZING_NETWORK_PARAMETER} \
       --interactive \
       --rm \
       --tty \
@@ -189,6 +183,9 @@ Use if a different userid is required.
       --volume ${SENZING_ETC_DIR}:/etc/opt/senzing \
       --volume ${SENZING_G2_DIR}:/opt/senzing/g2 \
       --volume ${SENZING_VAR_DIR}:/var/opt/senzing \
+      ${SENZING_RUNAS_USER_PARAMETER} \
+      ${SENZING_NETWORK_PARAMETER} \
+      ${SENZING_OPT_MICROSOFT_DIR_PARAMETER} \
       senzing/g2loader \
         --purgeFirst \
         --iniFile /etc/opt/senzing/G2Project.ini \
@@ -223,20 +220,20 @@ see [Environment Variables](https://github.com/Senzing/knowledge-base/blob/maste
 
 ### Build docker image for development
 
-1. Option #1 - Using `docker` command and GitHub.
+1. **Option #1:** Using `docker` command and GitHub.
 
     ```console
     sudo docker build --tag senzing/g2loader https://github.com/senzing/docker-g2loader.git
     ```
 
-1. Option #2 - Using `docker` command and local repository.
+1. **Option #2:** Using `docker` command and local repository.
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
     sudo docker build --tag senzing/g2loader .
     ```
 
-1. Option #3 - Using `make` command.
+1. **Option #3:** Using `make` command.
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
